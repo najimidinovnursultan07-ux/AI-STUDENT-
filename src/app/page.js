@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { Sparkles, FileText, Languages, HelpCircle } from 'lucide-react';
 
 export default function Home() {
@@ -53,7 +54,10 @@ export default function Home() {
           <h2 className="text-sm font-semibold text-gray-400 px-1">AI Куралдар:</h2>
 
           {/* 1. AI Конспект */}
-          <div className="group relative bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.05] hover:border-purple-500/30 p-4 rounded-2xl transition-all duration-300 backdrop-blur-md cursor-pointer shadow-lg">
+          <Link
+            href="/analyze"
+            className="group relative block bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.05] hover:border-purple-500/30 p-4 rounded-2xl transition-all duration-300 backdrop-blur-md cursor-pointer shadow-lg"
+          >
             <div className="flex items-center gap-4">
               <div className="p-3 bg-blue-500/10 rounded-xl text-blue-400 group-hover:scale-110 transition-transform">
                 <FileText className="w-6 h-6" />
@@ -63,7 +67,7 @@ export default function Home() {
                 <p className="text-xs text-gray-400 mt-0.5">Текстти же сүрөттү жүктө, AI сага кыскача тезис жасап берет</p>
               </div>
             </div>
-          </div>
+          </Link>
 
           {/* 2. Тез Шпаргалка */}
           <div className="group relative bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.05] hover:border-pink-500/30 p-4 rounded-2xl transition-all duration-300 backdrop-blur-md cursor-pointer shadow-lg">
