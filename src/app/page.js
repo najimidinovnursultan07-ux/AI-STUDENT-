@@ -1,65 +1,102 @@
-import Image from "next/image";
+'use client';
+
+import { useEffect, useState } from 'react';
+import { Sparkles, FileText, Languages, HelpCircle } from 'lucide-react';
 
 export default function Home() {
+  const [user, setUser] = useState(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    // Компонент клиентке толук жүктөлгөндө гана иштесин
+    setIsMounted(true);
+
+    if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
+      const tg = window.Telegram.WebApp;
+      try {
+        tg.ready();
+        tg.expand();
+        if (tg.initDataUnsafe?.user) {
+          setUser(tg.initDataUnsafe.user);
+        }
+      } catch (e) {
+        console.error("Telegram SDK error:", e);
+      }
+    }
+  }, []);
+
+  // Эгер компонент браузерде толук жүктөлө элек болсо, 
+  // Сервер менен Клиенттин HTML коддору дал келиши үчүн бош караңгы экран көрсөтүп турабыз
+  if (!isMounted) {
+    return <div className="min-h-screen bg-[#0B0F19]"></div>;
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="p-4 max-w-md mx-auto flex flex-col justify-between min-h-screen pb-8">
+      {/* Жогорку бөлүк: Саламдашуу */}
+      <div>
+        <div className="flex items-center justify-between mt-4 mb-8">
+          <div>
+            <p className="text-xs text-gray-400 uppercase tracking-widest font-semibold">Кош келдиң!</p>
+            <h1 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
+              Салам, {user ? user.first_name : 'Студент'} 👋
+            </h1>
+            <p className="text-sm text-gray-400 mt-1">Бүгүн эмне үйрөнөсүң?</p>
+          </div>
+          <div className="bg-purple-500/10 p-2 rounded-xl border border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+            <Sparkles className="w-5 h-5 text-purple-400 animate-pulse" />
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Негизги Тизме (Функциялар) */}
+        <div className="space-y-4">
+          <h2 className="text-sm font-semibold text-gray-400 px-1">AI Куралдар:</h2>
+
+          {/* 1. AI Конспект */}
+          <div className="group relative bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.05] hover:border-purple-500/30 p-4 rounded-2xl transition-all duration-300 backdrop-blur-md cursor-pointer shadow-lg">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-500/10 rounded-xl text-blue-400 group-hover:scale-110 transition-transform">
+                <FileText className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-200">AI Конспект Анализ</h3>
+                <p className="text-xs text-gray-400 mt-0.5">Текстти же сүрөттү жүктө, AI сага кыскача тезис жасап берет</p>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. Тез Шпаргалка */}
+          <div className="group relative bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.05] hover:border-pink-500/30 p-4 rounded-2xl transition-all duration-300 backdrop-blur-md cursor-pointer shadow-lg">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-pink-500/10 rounded-xl text-pink-400 group-hover:scale-110 transition-transform">
+                <HelpCircle className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-200">Тез Шпаргалка & Тест</h3>
+                <p className="text-xs text-gray-400 mt-0.5">Тема боюнча экзаменде келе турган суроолорду даярдоо</p>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. Тил Котормочу */}
+          <div className="group relative bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.05] hover:border-emerald-500/30 p-4 rounded-2xl transition-all duration-300 backdrop-blur-md cursor-pointer shadow-lg">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-emerald-500/10 rounded-xl text-emerald-400 group-hover:scale-110 transition-transform">
+                <Languages className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-200">Контексттик Котормочу</h3>
+                <p className="text-xs text-gray-400 mt-0.5">Кыргыз, орус, англис жана немис тилдерине мааниси менен которуу</p>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-    </div>
+      </div>
+
+      {/* Төмөнкү логотип */}
+      <div className="text-center mt-8">
+        <p className="text-xs text-gray-600 font-medium">AI Student PRO • v1.0.0</p>
+      </div>
+    </main>
   );
 }
